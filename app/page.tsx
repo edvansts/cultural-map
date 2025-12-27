@@ -8,25 +8,10 @@ import {
   useGeoLocation,
 } from "@/src/hooks/use-geolocation";
 import { useEffect, useState } from "react";
-import CasaDaVeraImage from "@/public/assets/arroz-com-galinha-da-vera.png";
-import { MapPoint } from "@/src/types/map";
+
 import { MapMarker } from "@/src/components/map-marker";
 import { FaLocationDot } from "react-icons/fa6";
-
-const interestPoints: MapPoint[] = [
-  {
-    id: 1,
-    name: "Casa de Vera do arroz de galinha",
-    mainImageUrl: CasaDaVeraImage,
-
-    location: {
-      latitude: -10.9126626,
-      longitude: -37.6743148,
-    },
-
-    phoneNumber: "(79) 99999-9999",
-  },
-];
+import { interestPoints } from "@/src/data/interest-points";
 
 export default function MapPage() {
   const { askForPermission, getCurrentPosition } = useGeoLocation();
