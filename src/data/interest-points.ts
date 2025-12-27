@@ -32,7 +32,7 @@ export const interestPoints: MapPoint[] = [
     mainImageUrl: PubLigaRockImage,
     location: {
       latitude: -10.9150451,
-      longitude: -37.7053501,
+      longitude: -37.6672413,
     },
     phoneNumber: "(79) 97777-7777",
   },

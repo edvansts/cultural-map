@@ -10,6 +10,12 @@ import { motion, AnimatePresence } from "motion/react";
 import { useGetGeoRoute } from "@/src/services/route";
 import { FaLocationDot } from "react-icons/fa6";
 import { OpenRouteOnMap } from "./open-route-on-map";
+import {
+  useMapBounds,
+  isPointInBounds,
+  calculateEdgePosition,
+} from "@/src/hooks/use-map-bounds";
+import { EdgeIndicator } from "./edge-indicator";
 
 interface MapMarkerProps {
   mapPoint: MapPoint;
@@ -23,6 +29,22 @@ export function MapMarker({ mapPoint, userLocation }: MapMarkerProps) {
   const [isRouteCardMinimized, setIsRouteCardMinimized] = useState(true);
   const { route, loading, fetchRoute } = useGetGeoRoute();
   const { current: map } = useMap();
+  const bounds = useMapBounds();
+
+  const isInView = isPointInBounds(
+    mapPoint.location.latitude,
+    mapPoint.location.longitude,
+    bounds
+  );
+
+  const edgePosition =
+    !isInView && !showRoute
+      ? calculateEdgePosition(
+          mapPoint.location.latitude,
+          mapPoint.location.longitude,
+          bounds
+        )
+      : null;
 
   const routeGeoJSON = route
     ? {
@@ -96,8 +118,29 @@ export function MapMarker({ mapPoint, userLocation }: MapMarkerProps) {
     }
   }, [showRoute, route, map]);
 
+  const handleEdgeIndicatorClick = () => {
+    if (!map) return;
+
+    map.flyTo({
+      center: [mapPoint.location.longitude, mapPoint.location.latitude],
+      zoom: 15,
+      duration: 1500,
+    });
+  };
+
   return (
     <>
+      {/* Edge Indicator when marker is off-screen */}
+      <AnimatePresence>
+        {edgePosition && (
+          <EdgeIndicator
+            name={mapPoint.name}
+            edgePosition={edgePosition}
+            onClick={handleEdgeIndicatorClick}
+          />
+        )}
+      </AnimatePresence>
+
       {/* Route Line */}
       {routeGeoJSON && showRoute && userLocation && (
         <Source id={`route-${mapPoint.id}`} type="geojson" data={routeGeoJSON}>
