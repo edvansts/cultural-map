@@ -57,7 +57,15 @@ export function isPointInBounds(
 }
 
 export interface EdgePosition {
-  position: "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right";
+  position:
+    | "top"
+    | "bottom"
+    | "left"
+    | "right"
+    | "top-left"
+    | "top-right"
+    | "bottom-left"
+    | "bottom-right";
   offsetX: number; // percentage from left (0-100)
   offsetY: number; // percentage from top (0-100)
 }
@@ -77,21 +85,21 @@ export function calculateEdgePosition(
   // Calculate relative position within the viewport range
   const latRange = bounds.north - bounds.south;
   const lngRange = bounds.east - bounds.west;
-  
+
   // Clamp to bounds and calculate percentage
   const clampedLat = Math.max(bounds.south, Math.min(bounds.north, lat));
   const clampedLng = Math.max(bounds.west, Math.min(bounds.east, lng));
-  
+
   const offsetY = ((bounds.north - clampedLat) / latRange) * 100;
   const offsetX = ((clampedLng - bounds.west) / lngRange) * 100;
 
   // Determine edge position
   if (isNorth && isEast) {
-    return { position: "top-right", offsetX: 95, offsetY: 5 };
+    return { position: "top-right", offsetX: 85, offsetY: 5 };
   } else if (isNorth && isWest) {
     return { position: "top-left", offsetX: 5, offsetY: 5 };
   } else if (isSouth && isEast) {
-    return { position: "bottom-right", offsetX: 95, offsetY: 95 };
+    return { position: "bottom-right", offsetX: 85, offsetY: 95 };
   } else if (isSouth && isWest) {
     return { position: "bottom-left", offsetX: 5, offsetY: 95 };
   } else if (isNorth) {
@@ -99,7 +107,7 @@ export function calculateEdgePosition(
   } else if (isSouth) {
     return { position: "bottom", offsetX, offsetY: 95 };
   } else if (isEast) {
-    return { position: "right", offsetX: 95, offsetY };
+    return { position: "right", offsetX: 85, offsetY };
   } else if (isWest) {
     return { position: "left", offsetX: 5, offsetY };
   }

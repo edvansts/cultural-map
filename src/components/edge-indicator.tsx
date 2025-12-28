@@ -9,7 +9,11 @@ interface EdgeIndicatorProps {
   onClick: () => void;
 }
 
-export function EdgeIndicator({ name, edgePosition, onClick }: EdgeIndicatorProps) {
+export function EdgeIndicator({
+  name,
+  edgePosition,
+  onClick,
+}: EdgeIndicatorProps) {
   const getArrowRotation = () => {
     switch (edgePosition.position) {
       case "top":
@@ -29,6 +33,22 @@ export function EdgeIndicator({ name, edgePosition, onClick }: EdgeIndicatorProp
     }
   };
 
+  const getTransform = () => {
+    const position = edgePosition.position;
+
+    // Para posições fixas nas bordas, ajusta a transformação
+    if (position === "top-left") return "translate(0%, 0%)";
+    if (position === "top-right") return "translate(-100%, 0%)";
+    if (position === "bottom-left") return "translate(0%, -100%)";
+    if (position === "bottom-right") return "translate(-100%, -100%)";
+    if (position === "top") return "translate(-50%, 0%)";
+    if (position === "bottom") return "translate(-50%, -100%)";
+    if (position === "left") return "translate(0%, -50%)";
+    if (position === "right") return "translate(-100%, -50%)";
+
+    return "translate(-50%, -50%)";
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.5 }}
@@ -39,7 +59,7 @@ export function EdgeIndicator({ name, edgePosition, onClick }: EdgeIndicatorProp
       style={{
         left: `${edgePosition.offsetX}%`,
         top: `${edgePosition.offsetY}%`,
-        transform: "translate(-50%, -50%)",
+        transform: getTransform(),
       }}
     >
       <button
@@ -61,9 +81,7 @@ export function EdgeIndicator({ name, edgePosition, onClick }: EdgeIndicatorProp
             d="M5 15l7-7 7 7"
           />
         </motion.svg>
-        <span className="text-sm font-semibold max-w-32 truncate">
-          {name}
-        </span>
+        <span className="text-sm font-semibold max-w-32 truncate">{name}</span>
       </button>
     </motion.div>
   );

@@ -2,7 +2,7 @@
 
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Marker, Layer, Source, useMap } from "react-map-gl/maplibre";
 import { MapPoint } from "../types/map";
 import Image from "next/image";
@@ -37,14 +37,20 @@ export function MapMarker({ mapPoint, userLocation }: MapMarkerProps) {
     bounds
   );
 
-  const edgePosition =
-    !isInView && !showRoute
-      ? calculateEdgePosition(
-          mapPoint.location.latitude,
-          mapPoint.location.longitude,
-          bounds
-        )
-      : null;
+  const edgePosition = useMemo(() => {
+    if (isInView || !bounds) return null;
+
+    return calculateEdgePosition(
+      mapPoint.location.latitude,
+      mapPoint.location.longitude,
+      bounds
+    );
+  }, [
+    isInView,
+    bounds,
+    mapPoint.location.latitude,
+    mapPoint.location.longitude,
+  ]);
 
   const routeGeoJSON = route
     ? {
